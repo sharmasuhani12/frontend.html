@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Event Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #18c1a3, #0ea5a8);
+            min-height: 100vh;
+        }
+
+        header {
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #f8f9fb;
+            border-radius: 12px;
+            padding: 20px;
+            width: 50%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #374151;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            resize: none;
+            height: 70px;
+        }
+
+        button {
+            background: #0ea5a8;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0891b2;
+        }
+
+        .top-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .event-box {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .event-box h3 {
+            margin: 0;
+            color: #0f766e;
+        }
+
+        .event-box p {
+            margin: 4px 0;
+            font-size: 13px;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #ef4444;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .empty {
+            text-align: center;
+            color: #6b7280;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>🎯 Smart Event Dashboard</header>
+
+    <div class="container">
+
+        <!-- LEFT -->
+        <div class="card">
+            <h2>Add New Event</h2>
+
+            <label>Event Title</label>
+            <input type="text" id="title">
+
+            <label>Event Date</label>
+            <input type="date" id="date">
+
+            <label>Category</label>
+            <select id="category">
+                <option>Conference</option>
+                <option>Workshop</option>
+                <option>Seminar</option>
+                <option>Hackathon</option>
+            </select>
+
+            <label>Description</label>
+            <textarea id="description"></textarea>
+
+            <button onclick="addEvent()">Add Event</button>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="card">
+            <div class="top-buttons">
+                <button onclick="clearEvents()">Clear All Events</button>
+                <button onclick="addSample()">Add Sample Events</button>
+            </div>
+
+            <div id="eventList">
+                <p class="empty">No events yet. Add your first event!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function addEvent() {
+            let title = document.getElementById("title").value;
+            let date = document.getElementById("date").value;
+            let category = document.getElementById("category").value;
+            let desc = document.getElementById("description").value;
+
+            if (title == "" || date == "") return;
+
+            let list = document.getElementById("eventList");
+            list.innerHTML += createEventBox(title, date, category, desc);
+
+            document.getElementById("title").value = "";
+            document.getElementById("date").value = "";
+            document.getElementById("description").value = "";
+        }
+
+        function createEventBox(title, date, category, desc) {
+            return `
+  <div class="event-box">
+    <span class="delete-btn" onclick="removeEvent(this)">❌</span>
+    <h3>${title}</h3>
+    <p><b>Date:</b> ${date}</p>
+    <p><b>Category:</b> ${category}</p>
+    <p>${desc}</p>
+  </div>`;
+        }
+
+        function removeEvent(btn) {
+            btn.parentElement.remove();
+            checkEmpty();
+        }
+
+        function clearEvents() {
+            document.getElementById("eventList").innerHTML =
+                "<p class='empty'>No events yet. Add your first event!</p>";
+        }
+
+        function addSample() {
+            clearEvents();
+            let samples = [
+                ["Tech Fest", "2026-03-10", "Conference", "Technology showcase"],
+                ["Design Workshop", "2026-04-02", "Workshop", "Hands-on UI/UX"],
+                ["Hackathon", "2026-05-15", "Hackathon", "24 hour coding event"]
+            ];
+
+            samples.forEach(e => {
+                document.getElementById("eventList").innerHTML +=
+                    createEventBox(e[0], e[1], e[2], e[3]);
+            });
+        }
+
+        function checkEmpty() {
+            let list = document.getElementById("eventList");
+            if (list.children.length === 0) {
+                list.innerHTML = "<p class='empty'>No events yet. Add your first event!</p>";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
